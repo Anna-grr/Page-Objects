@@ -1,5 +1,6 @@
 package ru.netology.web.test;
 
+import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.Test;
 import ru.netology.web.data.DataHelper;;
 import ru.netology.web.page.LoginPage;
@@ -34,6 +35,7 @@ class MoneyTransferTest {
 
     @Test
     void shouldTransferMoneyFromSecondCardToFirst() {
+        Configuration.holdBrowserOpen = true;
         LoginPage loginPage = open("http://localhost:9999", LoginPage.class);
         var authInfo = DataHelper.getAuthInfo();
         var verificationPage = loginPage.validLogin(authInfo);
@@ -47,7 +49,7 @@ class MoneyTransferTest {
         var firstCardBalanceExpected = firstCardBalance + amount;
         var secondCardBalanceExpected = secondCardBalance - amount;
         var transferPage = dashboardPage.selectCardToTransfer(firstCardInfo);
-        dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), firstCardInfo);
+        dashboardPage = transferPage.makeValidTransfer(String.valueOf(amount), secondCardInfo);
         var firstCardBalanceActual = dashboardPage.getCardBalance(firstCardInfo);
         var secondCardBalanceActual = dashboardPage.getCardBalance(secondCardInfo);
         assertEquals(firstCardBalanceExpected, firstCardBalanceActual);
